@@ -87,28 +87,63 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Form submission handling with Formspree
-document.getElementById('contactForm').addEventListener('submit', function(e) {
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
+// Form submission handling with Formspree AJAX
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const contactForm = document.getElementById('contactForm');
+    
+    // Hide previous messages
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+    
+    // Get form data
+    const formData = new FormData(this);
     
     // Show loading state
     submitBtn.disabled = true;
+    const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     
-    // The form will be submitted to Formspree via the action attribute
-    // After submission, Formspree will handle the email and redirect
-});
-
-// Listen for successful form submission
-window.addEventListener('load', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'true') {
-        // Show success message
-        document.getElementById('successMessage').style.display = 'block';
-        document.getElementById('contactForm').style.display = 'none';
+    try {
+        // Send form data to Formspree using AJAX
+        const response = await fetch('https://formspree.io/f/xgojdvjz', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         
-        // Scroll to success message
+        if (response.ok) {
+            // Success!
+            successMessage.style.display = 'block';
+            contactForm.style.display = 'none';
+            
+            // Scroll to success message
+            document.querySelector('.contact').scrollIntoView({ behavior: 'smooth' });
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        } else {
+            // Error response
+            throw new Error('Form submission failed');
+        }
+    } catch (error) {
+        // Error handling
+        console.error('Error:', error);
+        errorMessage.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        
+        // Scroll to error message
         document.querySelector('.contact').scrollIntoView({ behavior: 'smooth' });
     }
 });
