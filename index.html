@@ -224,16 +224,19 @@
                         </div>
                     </div>
                 </div>
-                <form class="contact-form" action="https://formspree.io/f/xgojdvjz" method="POST" id="contactForm">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                    <input type="email" name="email" placeholder="Your Email" required>
-                    <input type="text" name="company" placeholder="Company Name" required>
-                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-                    <button type="submit" class="cta-button">Send Message</button>
+                <form class="contact-form" id="contactForm">
+                    <input type="text" name="name" id="name" placeholder="Your Name" required>
+                    <input type="email" name="email" id="email" placeholder="Your Email" required>
+                    <input type="text" name="company" id="company" placeholder="Company Name" required>
+                    <textarea name="message" id="message" placeholder="Your Message" rows="5" required></textarea>
+                    <button type="submit" class="cta-button" id="submitBtn">Send Message</button>
                 </form>
             </div>
             <div id="successMessage" class="success-message" style="display:none;">
                 <p>✅ Thank you! Your message has been sent successfully. We'll get back to you soon.</p>
+            </div>
+            <div id="errorMessage" class="error-message" style="display:none;">
+                <p>❌ Error sending message. Please try again or email us directly at vikas@tirupaticonsulting.in</p>
             </div>
         </div>
     </section>
