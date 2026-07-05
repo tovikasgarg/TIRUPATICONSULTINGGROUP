@@ -17,45 +17,6 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     });
 });
 
-// Form submission handler
-function handleSubmit(event) {
-    event.preventDefault();
-    
-    // Get form data
-    const formInputs = event.target.querySelectorAll('input, textarea');
-    const name = formInputs[0].value;
-    const email = formInputs[1].value;
-    const company = formInputs[2].value;
-    const message = formInputs[3].value;
-    
-    // Simple validation
-    if (!name || !email || !company || !message) {
-        alert('Please fill in all fields');
-        return;
-    }
-    
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address');
-        return;
-    }
-    
-    // Prepare email body
-    const emailBody = `Name: ${name}\nEmail: ${email}\nCompany: ${company}\nMessage: ${message}`;
-    const mailtoLink = `mailto:vikas@tirupaticonsulting.in?subject=Contact%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(emailBody)}`;
-    
-    // Open email client
-    window.location.href = mailtoLink;
-    
-    // Show success message
-    setTimeout(() => {
-        alert('Thank you for reaching out! Your email client will open to send your message.');
-        // Reset form
-        event.target.reset();
-    }, 100);
-}
-
 // Smooth scroll for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -125,3 +86,29 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Form submission handling with Formspree
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    
+    // The form will be submitted to Formspree via the action attribute
+    // After submission, Formspree will handle the email and redirect
+});
+
+// Listen for successful form submission
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('contactForm').style.display = 'none';
+        
+        // Scroll to success message
+        document.querySelector('.contact').scrollIntoView({ behavior: 'smooth' });
+    }
+});
